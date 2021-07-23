@@ -197,11 +197,14 @@ tbody {
 
 /* Track */
 ::-webkit-scrollbar-track {
-	background: var(--disabled);
+	background: transparent;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-	background: var(--border);
+	background: var(--disabled-inner);
 	border-radius: 10px;
+	&:hover {
+		background: var(--border);
+	}
 }

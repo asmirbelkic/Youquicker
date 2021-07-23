@@ -39,6 +39,7 @@
 		"fluent-ffmpeg": "^2.1.2",
 		"jquery": "^3.6.0",
 		"node-itunes-search": "^1.2.2",
+		"toastr": "^2.1.4",
 		"update-electron-app": "^2.0.1",
 		"ytdl-core": "^4.9.0",
 		"ytpl": "^2.2.1"
