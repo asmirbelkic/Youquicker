@@ -6,11 +6,20 @@
 	"scripts": {
 		"start": "electron .",
 		"build-windows": "electron-builder build --win --x64",
+		"publish": "electron-builder build --win -p always ",
 		"package-mac": "rm node_modules/ffmpeg-static/ffmpeg.exe || cp ffmpeg/osx/ffmpeg node_modules/ffmpeg-static/ffmpeg && electron-builder build --mac",
 		"package-linux": "rm node_modules/ffmpeg-static/ffmpeg.exe || cp ffmpeg/linux/ffmpeg node_modules/ffmpeg-static/ffmpeg && electron-builder build --linux",
 		"package-win": "rm node_modules/ffmpeg-static/ffmpeg || cp ffmpeg/win/ffmpeg.exe node_modules/ffmpeg-static/ffmpeg.exe && electron-builder build --win --x64"
 	},
 	"build": {
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "asmirbelkic",
+				"repo": "apptest",
+				"token": "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"
+			}
+		],
 		"appId": "com.electron.udownload",
 		"files": [
 			"!ffmpeg/*",
@@ -23,10 +32,12 @@
 	"author": "Thorsieger",
 	"license": "MIT",
 	"dependencies": {
-		"electron-reload": "^1.5.0",
+		"electron-log": "^4.4.0",
 		"electron-squirrel-startup": "^1.0.0",
+		"electron-updater": "^4.3.9",
 		"ffmpeg-static": "^4.2.7",
 		"fluent-ffmpeg": "^2.1.2",
+		"jquery": "^3.6.0",
 		"node-itunes-search": "^1.2.2",
 		"update-electron-app": "^2.0.1",
 		"ytdl-core": "^4.9.0",

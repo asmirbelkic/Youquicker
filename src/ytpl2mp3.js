@@ -3,9 +3,9 @@ const ytpl = require("ytpl");
 const ytdl = require("ytdl-core");
 const ffmpeg = require("fluent-ffmpeg");
 const { remote } = require("electron");
-const path = require("path");
+const $ = require("jquery");
+const appDir = remote.app.getAppPath();
 const itunesAPI = require("node-itunes-search");
-
 var pathToFfmpeg = require("ffmpeg-static").replace(
 	"app.asar",
 	"app.asar.unpacked"
@@ -16,31 +16,53 @@ ffmpeg.setFfmpegPath(pathToFfmpeg);
 var taille;
 var chemin;
 var format;
-
+var debug;
+var messageBox;
+const settingFile = "userSetting.json";
+let setting;
 window.onload = () => {
-	let setting = JSON.parse(fs.readFileSync(__dirname + "/userSetting.json"));
+	// Setting file
+	fs.access(settingFile, fs.constants.F_OK, (err) => {
+		if (err) {
+			$("#messageBoxAlert").fadeIn();
+			$("#accepte-rule").on("click", function () {
+				$("#messageBoxAlert").fadeOut();
+				$("#messageBox").prop("checked", true);
+				save_param();
+				console.log("Settings file : Created");
+			});
+		} else {
+			setting = JSON.parse(fs.readFileSync(appDir + "/userSetting.json"));
+			chemin = setting.path || process.env.HOME || process.env.USERPROFILE;
+			messageBox = setting.messageBox;
+			debug = setting.debug;
+			document.getElementById("path_text").value = chemin;
+			if (debug) {
+				document.getElementById("checkDebug").checked = true;
+				$("#debug-window").fadeIn();
+			} else document.getElementById("checkDebug").checked = false;
 
-	chemin = setting.path || process.env.HOME || process.env.USERPROFILE;
-	document.getElementById("path_text").value = chemin;
-	if (setting.debug) {
-		document.getElementById("checkDebug").checked = true;
-		$("#debug-window").fadeIn();
-	} else document.getElementById("checkDebug").checked = false;
-
-	if (setting.messageBox || setting.messageBox === true) {
-		document.getElementById("messageBox").checked = true;
-		$("#messageBoxAlert").fadeIn();
-		$("#accepte-rule").on("click", function () {
-			$("#messageBoxAlert").fadeOut();
-			$("#messageBox").prop("checked", true);
-			save_param();
-		});
-	} else {
-		$("#messageBoxAlert").fadeOut();
-		document.getElementById("messageBox").checked = false;
-	}
-
-	document.getElementById(setting.format).checked = true;
+			if (messageBox === true) {
+				document.getElementById("messageBox").checked = true;
+				$("#messageBoxAlert").fadeIn();
+				$("#accepte-rule").on("click", function () {
+					$("#messageBoxAlert").fadeOut();
+					$("#messageBox").prop("checked", true);
+					save_param();
+				});
+			} else {
+				$("#messageBoxAlert").hide();
+				document.getElementById("messageBox").checked = false;
+			}
+			document.getElementById(setting.format).checked = true;
+			console.log(
+				"Settings file : Readed " + chemin,
+				setting.format,
+				debug,
+				messageBox
+			);
+		}
+	});
 };
 
 function download() {
@@ -139,7 +161,6 @@ function download_track(link) {
 		});
 	});
 }
-// $("#dl-button").trigger("click");
 
 function dl_track_from_playlist(playlist, element) {
 	const videoItems = playlist.items;
@@ -290,6 +311,8 @@ function save_param() {
 		debug: document.getElementById("checkDebug").checked,
 		messageBox: document.getElementById("messageBox").checked,
 	};
-
-	fs.writeFileSync(__dirname + "/userSetting.json", JSON.stringify(setting));
+	fs.writeFileSync(appDir + "/userSetting.json", JSON.stringify(setting));
 }
+$("#saveParam").click(function () {
+	toastr.success(`Sauvegardé`, { timeOut: 100 });
+});
