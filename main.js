@@ -2,7 +2,7 @@ if (require("electron-squirrel-startup")) return;
 const electron = require("electron");
 const globalShortcut = electron.globalShortcut;
 require("update-electron-app")({
-	repo: "github-user/repo",
+	repo: "asmirbelkic/apptest",
 });
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -24,8 +24,6 @@ function createWindow() {
 	});
 	mainWindow.webContents.openDevTools();
 	mainWindow.loadFile(`${__dirname}/src/index.html`);
-	// Open the DevTools.
-	// mainWindow.webContents.openDevTools();
 	mainWindow.on("closed", function () {
 		mainWindow = null;
 	});
