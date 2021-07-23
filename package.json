@@ -1,0 +1,39 @@
+{
+	"name": "yt2mp3",
+	"version": "1.0.0",
+	"description": "Download youtube playlist to mp3",
+	"main": "main.js",
+	"scripts": {
+		"start": "electron .",
+		"build-windows": "electron-builder build --win --x64",
+		"package-mac": "rm node_modules/ffmpeg-static/ffmpeg.exe || cp ffmpeg/osx/ffmpeg node_modules/ffmpeg-static/ffmpeg && electron-builder build --mac",
+		"package-linux": "rm node_modules/ffmpeg-static/ffmpeg.exe || cp ffmpeg/linux/ffmpeg node_modules/ffmpeg-static/ffmpeg && electron-builder build --linux",
+		"package-win": "rm node_modules/ffmpeg-static/ffmpeg || cp ffmpeg/win/ffmpeg.exe node_modules/ffmpeg-static/ffmpeg.exe && electron-builder build --win --x64"
+	},
+	"build": {
+		"appId": "com.electron.udownload",
+		"files": [
+			"!ffmpeg/*",
+			"!dist/*"
+		],
+		"linux": {
+			"target": "AppImage"
+		}
+	},
+	"author": "Thorsieger",
+	"license": "MIT",
+	"dependencies": {
+		"electron-reload": "^1.5.0",
+		"electron-squirrel-startup": "^1.0.0",
+		"ffmpeg-static": "^4.2.7",
+		"fluent-ffmpeg": "^2.1.2",
+		"node-itunes-search": "^1.2.2",
+		"update-electron-app": "^2.0.1",
+		"ytdl-core": "^4.9.0",
+		"ytpl": "^2.2.1"
+	},
+	"devDependencies": {
+		"electron": "^9.3.1",
+		"electron-builder": "^22.8.1"
+	}
+}

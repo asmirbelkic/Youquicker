@@ -1,0 +1,372 @@
+$shadow-map: (
+	df: (
+		0 1px 3px 0 rgba($color-dark, 0.1),
+		0 1px 2px 0 rgba($color-dark, 0.06),
+	),
+	md: (
+		0 4px 6px -1px rgba($color-dark, 0.3),
+		0 2px 4px -1px rgba($color-dark, 0.06),
+	),
+	lg: (
+		0px 0.5rem 0.8rem rgba($color-dark, 0.1),
+	),
+	xl: (
+		0 20px 25px -5px rgba($color-dark, 0.1),
+		0 10px 10px -5px rgba($color-dark, 0.04),
+	),
+);
+
+@mixin box-shadows($property: "box-shadow") {
+	@each $name, $hex in $shadow-map {
+		&-#{$name} {
+			#{$property}: $hex;
+		}
+	}
+}
+
+.shadow {
+	@include box-shadows();
+}
+
+.p25 {
+	padding: 25px;
+}
+
+.p10 {
+	padding: 10px;
+}
+
+// text
+.tac {
+	text-align: center;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.bg-w {
+	padding: 5px 10px;
+	border-radius: var(--radius);
+	background: var(--disabled);
+}
+
+.p {
+	font-size: 0.875rem;
+	a {
+		color: $color-blue-ribbon;
+		text-decoration: none;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+	&-small {
+		font-size: calc(var(--font-size) - 2px);
+	}
+}
+
+.wps {
+	white-space: break-spaces;
+}
+
+.lh {
+	&-large {
+		line-height: 1.5;
+	}
+}
+
+.tl {
+	font-style: italic;
+}
+
+//  Margins
+.mx-auto {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ml-auto {
+	margin-left: auto;
+}
+
+.mr-auto {
+	margin-right: auto;
+}
+
+$spacer: 20px;
+$spacers: (
+	0: 0,
+	1: (
+		$spacer * 0.5,
+	),
+	2: (
+		$spacer * 1,
+	),
+	3: $spacer * 1.5,
+	4: (
+		$spacer * 2,
+	),
+);
+
+$xy-border: (
+	top: t,
+	right: r,
+	bottom: b,
+	left: l,
+);
+
+// set key value pairs for margin and padding
+@each $prop, $letter in (margin: m, padding: p) {
+	// loop through top, right, bottom, and left
+	@each $direction, $d in $xy-border {
+		// loop through the spacers we've set
+		@each $unit, $rem in $spacers {
+			.#{$letter}#{$d}#{$unit} {
+				#{$prop}-#{$direction}: #{$rem};
+			}
+		}
+	}
+}
+
+$max: 4;
+$offset: 1;
+$unit: "rem"; // Feel free to change the unit.
+
+@mixin list-loop($className, $styleName) {
+	$i: 0;
+
+	@while $i <=$max {
+		#{$className + $i} {
+			#{$styleName}: #{$i + $unit};
+		}
+
+		$i: $i + $offset;
+	}
+}
+
+@include list-loop(".p", "padding");
+
+.op-light {
+	opacity: 0.5;
+}
+
+// Justify
+.jcc {
+	justify-content: center;
+}
+
+.jcsb {
+	justify-content: space-between;
+}
+
+.jcfe {
+	justify-content: flex-end;
+}
+
+.aic {
+	align-items: center;
+}
+
+//  Display
+
+.dib {
+	display: inline-block;
+}
+
+.block {
+	display: block !important;
+}
+
+.flex {
+	display: flex;
+}
+
+a {
+	text-decoration: none;
+}
+
+.dnone {
+	display: none;
+}
+
+.imported {
+	z-index: 999;
+	background: #fff;
+}
+
+// Widths
+
+.w {
+	&-large {
+		width: 95%;
+	}
+
+	&-middle {
+		width: 85%;
+	}
+
+	&-small {
+		width: 66.666%;
+	}
+
+	&-auto {
+		width: auto !important;
+	}
+}
+
+//  Other
+.flex1 {
+	flex: 1;
+}
+
+.fcolumn {
+	flex-direction: column;
+}
+
+.relative {
+	position: relative;
+}
+
+// z-indexes
+.z {
+	&-priority {
+		z-index: 99;
+	}
+
+	&-main {
+		z-index: 2;
+	}
+}
+
+// Transition & Animations
+.tr25 {
+	transition: 0.15s ease;
+}
+
+.hidden {
+	visibility: hidden;
+	opacity: 0;
+	transform: translate(-50%, -40%);
+}
+
+.visible {
+	opacity: 1;
+	visibility: visible;
+	transform: translate(-50%, -50%);
+}
+
+.p-tooltip {
+	/* Used to position the arrow */
+	position: relative;
+
+	.tooltip-icon {
+		width: 20px;
+		height: 20px;
+		stroke: var(--white);
+	}
+
+	&.pd-small {
+		.p-tooltip-content {
+			padding: 7px;
+		}
+	}
+
+	&:hover {
+		.p-tooltip-arrow,
+		.p-tooltip-content {
+			opacity: 1;
+		}
+	}
+}
+
+/* Show the arrow and content when hovering the trigger element */
+
+.p-tooltip-arrow {
+	/* Invisible by default */
+	opacity: 0;
+
+	/* Border */
+	border: 8px solid transparent;
+	border-top-color: #1a1a1a;
+
+	/* Position */
+	bottom: 100%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%, 8px);
+
+	/* Zero size */
+	height: 0;
+	width: 0;
+
+	/* Displayed on top of other element */
+	z-index: 10;
+}
+
+.p-tooltip-content {
+	opacity: 0;
+	border-radius: 5px;
+	padding: 10px;
+	min-width: 50px;
+	white-space: nowrap;
+	pointer-events: none;
+	background-color: #1a1a1a;
+	bottom: 100%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%, -8px);
+	z-index: 10;
+
+	p {
+		margin: 0;
+		color: #fff;
+	}
+
+	.icon svg {
+		stroke: #fff;
+	}
+}
+
+.status-light {
+	/* Background color */
+	background-color: #00d067;
+
+	/* Rounded border */
+	border-radius: 9999px;
+
+	/* Size */
+	height: 8px;
+	width: 8px;
+
+	/* Spacing */
+	margin-right: 8px;
+}
+
+.status-content {
+	flex: 1;
+
+	p {
+		span {
+			font-style: 8px;
+			opacity: 0.5;
+		}
+	}
+}
+
+.status-item {
+	/* Center the content */
+	align-items: center;
+	display: flex;
+
+	&:last-child {
+		margin-top: 10px;
+	}
+}
+
+input[type="text"].input-path {
+	border: 0;
+	background: var(--disabled);
+	height: 40px;
+	pointer-events: none;
+	color: #777;
+}

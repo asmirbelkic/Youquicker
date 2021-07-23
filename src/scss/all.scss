@@ -1,0 +1,73 @@
+/*
+  Design & Code CSS
+  Author : Asmir BELKIC
+  LICENCE : MIT License
+  DATE : 19/07/2020
+*/
+
+// UI Colors
+$color-green-fern: #60b66e;
+$color-purple-amethyst: #4e25e1;
+$color-grey-gallery: #d4d4d4;
+$color-blue-ribbon: #0253fd;
+$color-red-carnation: #f35f63;
+$color-dark: #000;
+$color-white: #ffffff;
+
+// UI Colors Map
+$ui-colors: (
+	default: $color-grey-gallery,
+	blue: $color-blue-ribbon,
+	green: $color-green-fern,
+	purple: $color-purple-amethyst,
+	white: $color-white,
+	dark: #000,
+);
+
+// root variables
+:root {
+	--primary-ff: "Inter", sans-serif;
+	--tcolor: #222;
+	--icon-size: 26px;
+	--purple: #{$color-purple-amethyst};
+	--blue: #{$color-blue-ribbon};
+	--font-size: 1rem;
+	--padding: 20px;
+	--padding-side: 0.9375rem;
+	--radius: 6px;
+	--focus: 2px rgba(0, 0, 0, 0.9);
+	--border: #cccccc;
+	--white: #fff;
+	--dark: #333333;
+	--border-hover: #222;
+	--disabled: #f7f7f7;
+	--disabled-inner: #e2e2e2;
+}
+
+// Noramalize
+@import "normalize";
+// All mixins
+@import "mixins";
+// Import Font
+@import "font";
+// Core all kind of stuff
+@import "core";
+// Notification & cards
+@import "notif";
+// Inputs & Champs
+@import "inputs";
+// Progress bars
+@import "progress";
+// Boutons etc
+@import "btns";
+
+// Menu contextuel
+@import "contextMenu";
+// App custom titlebar
+@import "titlebar";
+// All aeasy acces class, LEGO BRICKS
+@import "compos";
+// A part
+@import "custom";
+// A part
+@import "toastr";

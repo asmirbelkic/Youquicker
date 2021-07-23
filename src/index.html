@@ -1,0 +1,238 @@
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Galion</title>
+	<link rel="stylesheet" type="text/css" href="css/all.css" />
+</head>
+
+<body>
+	<!-- Modal -->
+	<div id="messageBoxAlert" class="overlay">
+		<div id="intro" class="card centered">
+			<div class="dnone block pl2 pr2 pt2">
+				<article class="impt-inner">
+					<h4>Attention</h4>
+					<p>
+						En utilisation cette application, vous acceptez ne pas télécharger de contenu copyright illégalement.<br>
+						Nous déclinons toutes responsabilité en cas de poursuite.</p>
+					<p class="mb0 mt1 op-light p-small">Vous pouvez desactiver ce message dans les options.</p>
+				</article>
+				<div class="flex mt2 pb2 aic">
+					<div class="flex jcfe aic">
+						<button id="accepte-rule" class="btn btn-blue">
+							Valider
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Notif -->
+
+	<!-- Debug window -->
+	<div id="debug-window" class="debug-window">
+		<dl class="p0 mt0">
+			<dt class="p-small p-light">Video title</dt>
+			<dd id="text-out" class="mt1"></dd>
+		</dl>
+		<dl class="p0 fcolumn">
+			<dt class="p-small p-light">Errors</dt>
+			<dd id="errp"></dd>
+			<dd id="errs"></dd>
+		</dl>
+		<dl class="p0">
+			<dt>
+				<p class="p-small p-light mb0">File name</p>
+			</dt>
+			<dd id="notifp" class="mt1"></dd>
+		</dl>
+		<dl class="p0">
+			<dt>
+				<p class="p-small p-light mb0">File size</p>
+			</dt>
+			<dd id="notifs" class="mt1"></dd>
+		</dl>
+		<dl class="p0">
+			<dt>
+				<p class="p-small p-light mb0">Download</p>
+			</dt>
+			<dd id="progressText" class="mt1"></dd>
+		</dl>
+	</div>
+
+	<!-- Container -->
+	<div class="container">
+		<aside class="sidebar-app">
+			<div class="sidebar-menu">
+				<a class="nav-item active" data-title="Télécharger une playlist">
+					<div class="icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+					</div>
+				</a>
+				<a class="nav-item" data-title="Paramètres">
+					<div class="icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+					</div>
+					<!-- <span>Settings</span> -->
+				</a>
+			</div>
+			<!-- <div class="sidebar-bottom">
+
+      </div> -->
+		</aside>
+		<!-- Sections block -->
+		<main class="app-content">
+			<!-- Header & Titlebar -->
+			<header id="titlebar">
+				<div id="drag-region">
+					<div id="window-controls">
+						<div class="button" id="min-button">
+							<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<line x1="19" y1="12" x2="5" y2="12"></line>
+							</svg>
+						</div>
+						<div class="button" id="close-button">
+							<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<line x1="19" y1="19" x2="5" y2="5"></line>
+								<line x1="19" y1="5" x2="5" y2="19"></line>
+							</svg>
+						</div>
+					</div>
+				</div>
+			</header>
+			<!-- App content -->
+			<div class="content block">
+				<section class="tab-pannel jce">
+					<!-- Search song -->
+					<div class="flex fcolumn pl2 pr2">
+						<h2 class="mb3">Télécharger</h2>
+						<div class="flex"><input class="input-main" spellcheck="false" type="text" id="playlist-id" placeholder="Lien de la playlist YouTube" />
+							<button onclick="download()" class="btn btn-blue ml2 large" id="dl-button">
+								Télécharger
+							</button></div>
+							<p class="mb0 mt1 op-light p-small">
+								Les fichiers seront téléchargés dans le dossier determiner dans la page <strong>options...</strong>.
+							</p>
+					</div>
+				</section>
+				<section class="tab-pannel scroll">
+					<article class="pl2 pr2">
+						<!-- General -->
+						<div class="sect">
+							<h2 class="mb4">Paramètres Généraux</h2>
+							<h4>Fichiers</h4>
+							<ul>
+								<li>
+									<input id="mp3" type="radio" name="radio" value="1" checked="" />
+									<label for="mp3">
+										Téléchargez la vidéo au format .mp3 (recommandé)
+									</label>
+								</li>
+								<li>
+									<input id="mp4" type="radio" name="radio" value="2"/>
+									<label for="mp4">Téléchargez la vidéo au format .mp4
+									</label>
+								</li>
+							</ul>
+							<p class="mb0 mt1 op-light p-small">
+								Le format de fichier par défaut est MP3 mais peut être basculé en vidéo
+								MP4.
+							</p>
+						</div>
+						<div class="sect">
+							<h4 class="mt4">Emplacement de téléchargement</h4>
+							<div class="flex">
+								<input class="input-path" type="text" id="path_text" name="" value="" disabled />
+								<button onclick="choose_path()" class="btn btn-o-dark small ml1 dib">Modifier...</button>
+							</div>
+							<p class="mb0 mt1 op-light p-small">
+								Les fichiers seront téléchargés dans le dossier choisi (cette option est personnalisable grâce au bouton
+								<strong>Modifier...</strong>).
+							</p>
+						</div>
+						<!-- avancés -->
+						<div class="sect">
+							<h4>Avancés</h4>
+							<!-- Debug -->
+							<dl>
+								<dt>
+									<label for="messageBox">
+										Message d'avertissement
+									</label>
+								</dt>
+								<dd>
+									<input type="checkbox" id="messageBox" name="messageBox" class="switch" />
+								</dd>
+							</dl>
+							<dl>
+								<dt>
+									<label for="checkDebug">
+										Débogage
+									</label>
+								</dt>
+								<dd>
+									<input type="checkbox" id="checkDebug" name="checkDebug" class="switch" />
+								</dd>
+							</dl>
+							<p class="mb0 mt2 op-light p-small">
+								Faites attention en manipulant les options avancées, activez l'option de débogage uniquement si
+								nécessaire.
+							</p>
+						</div>
+						<div class="flex jcsb mt2">
+							<button class="btn btn-default" id="cgu-see">
+								Lire les CGU
+							</button>
+							<button class="btn btn-green" onclick="save_param()">
+								Sauvegarder
+							</button>
+						</div>
+						<div class="mt4 dnone" id="cgu-more">
+							<h4>CGU</h4>
+							<p>
+								Les présentes «&nbsp;conditions générales d'utilisation&nbsp;»
+								ont pour objet l'encadrement juridique des modalités de mise à
+								disposition des services de l'application galion et leur
+								utilisation par «&nbsp;l'Utilisateur&nbsp;».
+							</p>
+							<p>
+								Les conditions générales d'utilisation doivent être acceptées
+								par tout Utilisateur souhaitant accéder au site. Elles
+								constituent le contrat entre le site et l'Utilisateur. L'accès
+								au site par l'Utilisateur signifie son acceptation des
+								présentes conditions générales d'utilisation.
+							</p>
+						</div>
+						<div class="p-small mx-auto mt4 mb4">
+							<p class="op-light">
+								We are using ElectronJS & NodeJS
+							</p>
+							<p class="op-light mt2">
+								&copy All rights reserved &dash; 2020
+							</p>
+						</div>
+					</article>
+				</section>
+			</div>
+		</main>
+	</div>
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+	<!-- Jquery -->
+	<script src="./js/jquery.js"></script>
+	
+	<!-- Main script -->
+	<script src="./ytpl2mp3.js"></script>
+	
+	<!-- Coté front-end -->
+	<script src="./front.js"></script>
+	
+	<script src="./js/toastr.min.js"></script>
+	<script>if (window.module) module = window.module;</script>
+
+</body>
+
+</html>

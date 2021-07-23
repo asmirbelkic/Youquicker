@@ -1,0 +1,55 @@
+#titlebar {
+	display: flex;
+	position: relative;
+	height: 36px;
+	align-items: center;
+	justify-content: space-between;
+	// border-bottom: 1px solid #ececec;
+
+	#drag-region {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+
+		-webkit-app-region: drag;
+	}
+
+	#window-controls {
+		display: flex;
+		align-items: center;
+		height: 100%;
+		-webkit-app-region: no-drag;
+
+		.button {
+			width: 48px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+			user-select: none;
+			cursor: pointer;
+			transition: 0.1s linear;
+			.icon {
+				width: 20px;
+				height: 20px;
+				stroke: #000;
+				fill: none;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+			}
+
+			&:hover {
+				opacity: 0.6;
+			}
+		}
+
+		#min-button {
+			grid-column: 1;
+		}
+		#close-button {
+			grid-column: 2;
+		}
+	}
+}

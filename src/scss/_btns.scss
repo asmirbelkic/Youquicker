@@ -1,0 +1,92 @@
+.btn {
+	text-decoration: none;
+	border-radius: var(--radius);
+	display: flex;
+	font-weight: normal;
+	font-size: var(--font-size);
+	font-family: var(--primary-ff);
+	align-items: center;
+	justify-content: center;
+	padding: 0 var(--padding-side);
+	cursor: pointer;
+	background: $color-grey-gallery;
+	outline: none;
+	border: 0;
+	height: 35px;
+	color: var(--white);
+	transition: 0.3s ease;
+
+	&:disabled {
+		cursor: not-allowed;
+		opacity: 0.9;
+
+		& + label {
+			cursor: not-allowed;
+		}
+	}
+
+	&.large {
+		cursor: pointer;
+		padding: 0 2.625rem;
+		background: $color-blue-ribbon;
+		border: 0;
+		height: 2.75rem;
+		color: white;
+	}
+
+	&.small {
+		min-height: 40px;
+		padding: 0 14px;
+		border-radius: 5px;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+
+	@each $theme, $color in $ui-colors {
+		&-#{$theme} {
+			background-color: $color;
+			&:hover {
+				background-color: darken($color, 10%);
+			}
+
+			&:active {
+				background-color: darken($color, 20%);
+			}
+
+			&:focus {
+				box-shadow: 0 0 0 3px rgba($color, 0.15);
+				outline: 2px dotted transparent;
+				outline-offset: 2px;
+			}
+		}
+	}
+
+	@each $theme, $color in $ui-colors {
+		&-o-#{$theme} {
+			background-color: transparent;
+			border: 1px solid lighten($color, 75%);
+			color: $color;
+			padding: 0 20px;
+			min-height: 40px;
+
+			&:hover {
+				background-color: $color;
+				color: invert($color, 100%);
+				border: 1px solid darken($color, 10%);
+			}
+
+			&:active {
+				background-color: lighten($color, 20%);
+				color: invert($color, 100%);
+			}
+
+			&:focus {
+				box-shadow: 0 0 0 3px rgba($color, 0.15);
+				outline: 2px dotted transparent;
+				outline-offset: 2px;
+			}
+		}
+	}
+}
