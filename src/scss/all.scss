@@ -24,9 +24,13 @@ $ui-colors: (
 	dark: #000,
 );
 
+html {
+	font-size: 15px;
+}
 // root variables
 :root {
-	--primary-ff: "Inter", sans-serif;
+	--primary-ff: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+		Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 	--tcolor: #222;
 	--icon-size: 26px;
 	--purple: #{$color-purple-amethyst};
@@ -34,7 +38,7 @@ $ui-colors: (
 	--font-size: 1rem;
 	--padding: 20px;
 	--padding-side: 0.9375rem;
-	--radius: 6px;
+	--radius: 10px;
 	--focus: 2px rgba(0, 0, 0, 0.9);
 	--border: #cccccc;
 	--white: #fff;

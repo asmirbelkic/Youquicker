@@ -4,7 +4,6 @@
 	height: 36px;
 	align-items: center;
 	justify-content: space-between;
-	border-bottom: 1px solid #e0e2e7;
 
 	#drag-region {
 		width: 100%;
@@ -30,7 +29,6 @@
 			height: 100%;
 			user-select: none;
 			cursor: pointer;
-			transition: 0.1s linear;
 			.icon {
 				width: 20px;
 				height: 20px;
@@ -41,7 +39,7 @@
 			}
 
 			&:hover {
-				opacity: 0.6;
+				opacity: 0.5;
 			}
 		}
 

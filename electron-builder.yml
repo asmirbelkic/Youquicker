@@ -1,0 +1,4 @@
+appId: com.asmirApp.ElectronAutoUpdate
+publish:
+  provider: github
+  token: [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]
