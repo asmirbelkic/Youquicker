@@ -64,11 +64,9 @@ ipcMain.on("app_version", (event) => {
 autoUpdater.on("update-available", (info) => {
 	sendStatusToWindow("update_available");
 });
-// autoUpdater.on("error", (err) => {
-// 	sendStatusToWindow("Error in auto-updater. " + err);
-// });
+
 autoUpdater.on("update-downloaded", (info) => {
-	sendStatusToWindow("La mise à jour est prête voulez vous l'installer ?");
+	sendStatusToWindow("update_downloaded");
 });
 
 ipcMain.on("restart_app", () => {

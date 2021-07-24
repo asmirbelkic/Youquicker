@@ -15,35 +15,21 @@ const notification = $("#updateModal");
 const message = $("#message");
 const restartButton = $("#restart-button");
 
-// ipcRenderer.on("update_available", () => {
-// 	ipcRenderer.removeAllListeners("update_available");
-// 	message.text("Une mise à jour est disponible. Téléchargement...");
-// 	notification.removeClass("hidden");
-// });
-
-// ipcRenderer.on("update_downloaded", () => {
-// 	ipcRenderer.removeAllListeners("update_downloaded");
-// 	message.text(
-// 		"Mise à jour télécharger. Voulez vous rédémarrer pour installer la mise à jour?"
-// 	);
-// 	restartButton.removeClass("hidden");
-// 	notification.removeClass("hidden");
-// });
-
 // ipcRenderer.on("message", function (event, text) {
+// 	notification.fadeIn();
 // 	message.text(text);
-// 	restartButton.removeClass("hidden");
-// 	notification.removeClass("hidden");
 // });
 
-ipcRenderer.on("update-available", function (event, text) {
+ipcRenderer.on("update_available", function (event, text) {
+	ipcRenderer.removeAllListeners("update_available");
 	notification.fadeIn();
-	message.text(text);
-	restartButton.removeClass("hidden");
-	notification.removeClass("hidden");
+	message.text("Une nouvelle mise à jour est disponible. Téléchargement...");
 });
-ipcRenderer.on("update-downloaded", function (event, text) {
-	message.text(text);
+
+ipcRenderer.on("update_downloaded", function (event, text) {
+	ipcRenderer.removeAllListeners("update_downloaded");
+	message.text("La mise à jour est prête voulez vous l'installer ?");
+	restartButton.removeClass("hidden");
 });
 
 ipcRenderer.send("app_version");
