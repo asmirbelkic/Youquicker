@@ -29,6 +29,8 @@ function createWindow() {
 	});
 	mainWindow.once("ready-to-show", () => {
 		autoUpdater.checkForUpdatesAndNotify();
+		console.log("checking for updates");
+		console.log(checkForUpdatesAndNotify());
 	});
 	globalShortcut.register("f5", function () {
 		console.log("f5 is pressed");

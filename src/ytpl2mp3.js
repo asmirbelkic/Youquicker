@@ -1,11 +1,13 @@
 const fs = require("fs");
 const ytpl = require("ytpl");
+const path = require("path");
 const ytdl = require("ytdl-core");
 const ffmpeg = require("fluent-ffmpeg");
 const shell = require("electron").shell;
 const $ = require("jquery");
 const { remote } = require("electron");
 const { ipcRenderer } = require("electron");
+const app = require("electron").remote.app;
 
 // Updating
 const version = $("#appVer");
@@ -27,11 +29,19 @@ ipcRenderer.on("update_available", () => {
 ipcRenderer.on("update_downloaded", () => {
 	ipcRenderer.removeAllListeners("update_downloaded");
 	message.text(
-		"Update Downloaded. It will be installed on restart. Restart now?"
+		"Mise à jour télécharger. Voulez vous rédémarrer pour installer la mise à jour ?"
 	);
 	restartButton.removeClass("hidden");
 	notification.removeClass("hidden");
 });
+
+ipcRenderer.send("app_version");
+ipcRenderer.on("app_version", (event, arg) => {
+	ipcRenderer.removeAllListeners("app_version");
+	version.text("Version " + arg.version);
+});
+
+console.log("Version :" + app.getVersion());
 
 function restartApp() {
 	ipcRenderer.send("restart_app");
@@ -40,14 +50,6 @@ function restartApp() {
 function closeNotification() {
 	notification.fadeOut("fast");
 }
-
-ipcRenderer.send("app_version");
-ipcRenderer.on("app_version", (event, arg) => {
-	ipcRenderer.removeAllListeners("app_version");
-	version.text("Version " + arg.version);
-});
-
-// version.text("Version " + remote.app.getVersion());
 
 // Toastr notifications
 const toastr = require("toastr");
@@ -58,9 +60,9 @@ toastr.options = {
 	onclick: null,
 };
 
-const cp = require("child_process");
+const appDir = app.getPath("userData");
+let dlDir = app.getPath("downloads");
 
-const appDir = remote.app.getAppPath();
 var pathToFfmpeg = require("ffmpeg-static").replace(
 	"app.asar",
 	"app.asar.unpacked"
@@ -72,13 +74,16 @@ var chemin;
 var format;
 var debug;
 var messageBox;
-const settingFile = "userSetting.json";
+const settingFile = appDir + "/userSetting.json";
 let output;
 let setting;
 window.onload = () => {
 	// Setting file
 	fs.access(settingFile, fs.constants.F_OK, (err) => {
 		if (err) {
+			if (!$("#path_text").val()) {
+				$("#path_text").val(dlDir);
+			}
 			$("#messageBoxAlert").fadeIn();
 			$("#accepte-rule").on("click", function () {
 				$("#messageBoxAlert").fadeOut();
