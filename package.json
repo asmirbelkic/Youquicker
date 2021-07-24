@@ -1,15 +1,16 @@
 {
 	"name": "yt2mp3",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"description": "Download youtube playlist to mp3",
 	"main": "main.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/asmirbelkic/apptest.git"
+	},
 	"scripts": {
 		"start": "electron .",
 		"build-windows": "electron-builder build --win --x64",
-		"publish": "electron-builder build --win -p always ",
-		"package-mac": "rm node_modules/ffmpeg-static/ffmpeg.exe || cp ffmpeg/osx/ffmpeg node_modules/ffmpeg-static/ffmpeg && electron-builder build --mac",
-		"package-linux": "rm node_modules/ffmpeg-static/ffmpeg.exe || cp ffmpeg/linux/ffmpeg node_modules/ffmpeg-static/ffmpeg && electron-builder build --linux",
-		"package-win": "rm node_modules/ffmpeg-static/ffmpeg || cp ffmpeg/win/ffmpeg.exe node_modules/ffmpeg-static/ffmpeg.exe && electron-builder build --win --x64"
+		"publish": "electron-builder build --win"
 	},
 	"build": {
 		"publish": [
@@ -29,10 +30,8 @@
 			"target": "AppImage"
 		}
 	},
-	"author": "Thorsieger",
 	"license": "MIT",
 	"dependencies": {
-		"electron-log": "^4.4.0",
 		"electron-updater": "^4.0.6",
 		"ffmpeg-static": "^4.2.7",
 		"fluent-ffmpeg": "^2.1.2",
