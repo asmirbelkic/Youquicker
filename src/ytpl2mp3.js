@@ -20,16 +20,10 @@ const restartButton = $("#restart-button");
 // 	message.text(text);
 // });
 
-ipcRenderer.on("update_available", function (event, text) {
-	ipcRenderer.removeAllListeners("update_available");
+ipcRenderer.on("message", function (event, text) {
 	notification.fadeIn();
-	message.text("Une nouvelle mise à jour est disponible. Téléchargement...");
-});
-
-ipcRenderer.on("update_downloaded", function (event, text) {
-	ipcRenderer.removeAllListeners("update_downloaded");
-	message.text("La mise à jour est prête voulez vous l'installer ?");
-	restartButton.removeClass("hidden");
+	message.text(text);
+	// restartButton.show();
 });
 
 ipcRenderer.send("app_version");

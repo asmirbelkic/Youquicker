@@ -28,14 +28,17 @@ function createWindow() {
 	win.on("closed", () => {
 		win = null;
 	});
-	globalShortcut.register("f5", function () {
-		console.log("f5 is pressed");
-		win.reload();
+	win.webContents.once("dom-ready", () => {
+		autoUpdater.checkForUpdatesAndNotify();
 	});
-	globalShortcut.register("CommandOrControl+R", function () {
-		console.log("CommandOrControl+R is pressed");
-		win.reload();
-	});
+	// globalShortcut.register("f5", function () {
+	// 	console.log("f5 is pressed");
+	// 	win.reload();
+	// });
+	// globalShortcut.register("CommandOrControl+R", function () {
+	// 	console.log("CommandOrControl+R is pressed");
+	// 	win.reload();
+	// });
 	return win;
 }
 
@@ -46,7 +49,6 @@ function sendStatusToWindow(text) {
 
 app.on("ready", () => {
 	createWindow();
-	autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on("window-all-closed", () => {
@@ -57,16 +59,22 @@ ipcMain.on("app_version", (event) => {
 	event.sender.send("app_version", { version: app.getVersion() });
 });
 
-// autoUpdater.on("checking-for-update", () => {
-// 	sendStatusToWindow("Checking for update...");
-// });
-
-autoUpdater.on("update-available", (info) => {
-	sendStatusToWindow("update_available");
+autoUpdater.on("checking-for-update", () => {
+	sendStatusToWindow("Recherche de mise à jour...");
 });
 
-autoUpdater.on("update-downloaded", (info) => {
-	sendStatusToWindow("update_downloaded");
+autoUpdater.on("update-available", (info) => {
+	sendStatusToWindow("Mise à jour disponible.");
+});
+
+autoUpdater.on("update-downloaded", (event, info) => {
+	sendStatusToWindow(
+		"Une mise à jour vient d'être téléchargé elle sera automatiquement installer au prochain lancement"
+	);
+});
+
+autoUpdater.on("update-not-available", (info) => {
+	sendStatusToWindow("Mise à jour non disponible.");
 });
 
 ipcMain.on("restart_app", () => {
