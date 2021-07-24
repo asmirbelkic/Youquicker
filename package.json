@@ -1,6 +1,6 @@
 {
 	"name": "yt2mp3",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "Download youtube playlist to mp3",
 	"main": "main.js",
 	"repository": {
@@ -27,6 +27,7 @@
 	},
 	"license": "MIT",
 	"dependencies": {
+		"electron-log": "^4.4.0",
 		"electron-updater": "^4.0.6",
 		"ffmpeg-static": "^4.2.7",
 		"fluent-ffmpeg": "^2.1.2",

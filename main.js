@@ -1,8 +1,13 @@
 const electron = require("electron");
 const globalShortcut = electron.globalShortcut;
 const { app, BrowserWindow, ipcMain } = require("electron");
+const log = require("electron-log");
 const { autoUpdater } = require("electron-updater");
 // const BrowserWindow = electron.BrowserWindow;
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = "info";
+log.info("App starting...");
 
 let mainWindow;
 function createWindow() {
@@ -52,6 +57,13 @@ app.on("window-all-closed", function () {
 	}
 });
 
+function sendStatus(text) {
+	log.info(text);
+	if (win) {
+		mainWindow.webContents.send("message", text);
+	}
+}
+
 app.on("activate", function () {
 	if (mainWindow === null) {
 		createWindow();
@@ -61,9 +73,13 @@ app.on("activate", function () {
 ipcMain.on("app_version", (event) => {
 	event.sender.send("app_version", { version: app.getVersion() });
 });
-
-autoUpdater.on("update-available", () => {
+autoUpdater.on("checking-for-update", () => {
+	sendStatus("Checking for update...");
+});
+autoUpdater.on("update-available", (ev, info) => {
 	mainWindow.webContents.send("update_available");
+	log.info("info", info);
+	log.info("arguments", arguments);
 });
 
 autoUpdater.on("update-downloaded", () => {
