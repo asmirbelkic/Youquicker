@@ -19,7 +19,7 @@ ipcRenderer.on("message", function (event, text) {
 	notification.fadeIn().removeClass("hidden");
 	message.text(text);
 	ipcRenderer.on("dlFinished", (event, arg) => {
-		if (arg) restartButton.fadeIn().removeClass("hidden");
+		if (arg === true) restartButton.fadeIn().removeClass("hidden");
 	});
 });
 
@@ -31,9 +31,10 @@ ipcRenderer.on("app_version", (event, arg) => {
 
 console.log("Version :" + app.getVersion());
 
-// function restartApp() {
-// 	ipcRenderer.send("restart_app");
-// }
+function restartApp() {
+	ipcRenderer.send("restart_app");
+}
+
 function closeNotification() {
 	notification.fadeOut("fast");
 }
@@ -92,9 +93,9 @@ window.onload = () => {
 
 			if (messageBox === true) {
 				document.getElementById("messageBox").checked = true;
-				$("#messageBoxAlert").fadeIn();
+				$("#messageBoxAlert").show();
 				$("#accepte-rule").on("click", function () {
-					$("#messageBoxAlert").fadeOut();
+					$("#messageBoxAlert").fadeOut("fast");
 					$("#messageBox").prop("checked", true);
 					save_param();
 				});
@@ -123,7 +124,7 @@ $(".input-main").on("keypress", function (e) {
 	}
 });
 function opendl_Folder() {
-	require("child_process").exec(`start "" ${chemin}`);
+	shell.openPath(chemin);
 }
 function download() {
 	startTime = Date.now();
@@ -219,7 +220,9 @@ function download_track(link) {
 function dl_track_from_playlist(playlist, element) {
 	const videoItems = playlist.items;
 	const videoLength = playlist.items.length;
-
+	toastr.info(
+		"Le téléchargement de playlist est en cours de modification et peux ne pas fonctionner."
+	);
 	if (format === "mp3") {
 		async function dlPlaylistMp3() {
 			for (let i = 0; i < videoLength; i++) {
@@ -250,13 +253,11 @@ function dl_track_from_playlist(playlist, element) {
 				const stream = ytdl(videoUrl);
 				output = `${chemin}/${videoTitle.replace(/[^\w\s]/gi, "-")}.mp4`;
 				console.log(videoTitle, videoUrl);
-				// stream.pipe(
-				// 	fs.createWriteStream(output)
-				// );
-				// stream.on("progress", () => {
-				// 	console.log("Downloading" + videoTitle);
-				// });
-				// await new Promise((resolve) => stream.on("finish", resolve));
+				stream.pipe(fs.createWriteStream(output));
+				stream.on("progress", () => {
+					console.log("Downloading" + videoTitle);
+				});
+				await new Promise((resolve) => stream.on("finish", resolve));
 			}
 		}
 		dlPlaylistMp4();

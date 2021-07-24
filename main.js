@@ -2,7 +2,7 @@ const electron = require("electron");
 const { app, BrowserWindow, ipcMain } = require("electron");
 const log = require("electron-log");
 const { autoUpdater } = require("electron-updater");
-// const BrowserWindow = electron.BrowserWindow;
+const isDev = require("electron-is-dev");
 
 let win;
 function createWindow() {
@@ -21,9 +21,13 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true,
+			// devTools: false,
 		},
 	});
-	win.webContents.openDevTools();
+	if (isDev) {
+		console.log("Running in development");
+		win.openDevTools();
+	}
 	win.loadFile(`${__dirname}/src/index.html`);
 	win.on("closed", () => {
 		win = null;
@@ -49,10 +53,6 @@ app.on("window-all-closed", () => {
 ipcMain.on("app_version", (event) => {
 	event.sender.send("app_version", { version: app.getVersion() });
 });
-
-// autoUpdater.on("checking-for-update", () => {
-// 	sendStatusToWindow("Recherche de mise à jour...");
-// });
 
 autoUpdater.on("update-available", (info) => {
 	sendStatusToWindow("Une mise à jour est disponible.");
