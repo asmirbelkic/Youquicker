@@ -1,12 +1,13 @@
 {
 	"name": "yt2mp3",
-	"version": "1.0.5",
+	"version": "1.1.0",
 	"description": "Download youtube playlist to mp3",
 	"main": "main.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/asmirbelkic/apptest.git"
 	},
+	"author": "Asmir Belkic",
 	"scripts": {
 		"start": "electron .",
 		"build": "electron-builder build --win --publish never",

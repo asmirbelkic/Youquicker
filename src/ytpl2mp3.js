@@ -15,21 +15,16 @@ const notification = $("#updateModal");
 const message = $("#message");
 const restartButton = $("#restart-button");
 
-$(document).on("click", 'a[href^="http"]', function (event) {
-	event.preventDefault();
-	shell.openExternal(this.href);
-});
-
 ipcRenderer.on("update_available", () => {
 	ipcRenderer.removeAllListeners("update_available");
-	message.text("A new update is available. Downloading now...");
+	message.text("Une mise à jour est disponible. Téléchargement...");
 	notification.removeClass("hidden");
 });
 
 ipcRenderer.on("update_downloaded", () => {
 	ipcRenderer.removeAllListeners("update_downloaded");
 	message.text(
-		"Mise à jour télécharger. Voulez vous rédémarrer pour installer la mise à jour ?"
+		"Mise à jour télécharger. Voulez vous rédémarrer pour installer la mise à jour?"
 	);
 	restartButton.removeClass("hidden");
 	notification.removeClass("hidden");
@@ -40,12 +35,7 @@ ipcRenderer.on("app_version", (event, arg) => {
 	ipcRenderer.removeAllListeners("app_version");
 	version.text("Version " + arg.version);
 });
-ipcRenderer.on("message", function (event, text) {
-	var container = document.getElementById("messages");
-	var message = document.createElement("div");
-	message.innerHTML = text;
-	container.appendChild(message);
-});
+
 console.log("Version :" + app.getVersion());
 
 function restartApp() {
@@ -304,8 +294,13 @@ function save_param() {
 	};
 	fs.writeFileSync(appDir + "/userSetting.json", JSON.stringify(setting));
 }
-$("#saveParam").click(function () {
+$("#saveParam").on("click", function () {
 	toastr.success(`Sauvegardé`, {
 		timeOut: 100,
 	});
+});
+
+$(document).on("click", 'a[href^="http"]', function (event) {
+	event.preventDefault();
+	shell.openExternal(this.href);
 });

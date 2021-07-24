@@ -1,18 +1,13 @@
 const electron = require("electron");
 const globalShortcut = electron.globalShortcut;
 const { app, BrowserWindow, ipcMain } = require("electron");
-const log = require("electron-log");
 const { autoUpdater } = require("electron-updater");
 // const BrowserWindow = electron.BrowserWindow;
 
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = "info";
-log.info("App starting...");
-
-let mainWindow;
+let win;
 function createWindow() {
 	// Création d'une fenetre en résolution 1133x720
-	mainWindow = new BrowserWindow({
+	win = new BrowserWindow({
 		maxWidth: 1000,
 		maxHeight: 950,
 		minWidth: 930,
@@ -27,63 +22,52 @@ function createWindow() {
 			enableRemoteModule: true,
 		},
 	});
-	mainWindow.webContents.openDevTools();
-	mainWindow.loadFile(`${__dirname}/src/index.html`);
-	mainWindow.on("closed", function () {
-		mainWindow = null;
-	});
-	mainWindow.once("ready-to-show", () => {
-		autoUpdater.checkForUpdatesAndNotify();
-		console.log("checking for updates");
-		console.log(checkForUpdatesAndNotify());
+	win.webContents.openDevTools();
+	win.loadFile(`${__dirname}/src/index.html`);
+	win.on("closed", () => {
+		win = null;
 	});
 	globalShortcut.register("f5", function () {
 		console.log("f5 is pressed");
-		mainWindow.reload();
+		win.reload();
 	});
 	globalShortcut.register("CommandOrControl+R", function () {
 		console.log("CommandOrControl+R is pressed");
-		mainWindow.reload();
+		win.reload();
 	});
+	return win;
+}
+
+function sendStatusToWindow(text) {
+	log.info(text);
+	win.webContents.send("message", text);
 }
 
 app.on("ready", () => {
 	createWindow();
+	autoUpdater.checkForUpdatesAndNotify();
 });
 
-app.on("window-all-closed", function () {
-	if (process.platform !== "darwin") {
-		app.quit();
-	}
-});
-
-function sendStatus(text) {
-	log.info(text);
-	if (win) {
-		mainWindow.webContents.send("message", text);
-	}
-}
-
-app.on("activate", function () {
-	if (mainWindow === null) {
-		createWindow();
-	}
+app.on("window-all-closed", () => {
+	app.quit();
 });
 
 ipcMain.on("app_version", (event) => {
 	event.sender.send("app_version", { version: app.getVersion() });
 });
+
 autoUpdater.on("checking-for-update", () => {
-	sendStatus("Checking for update...");
-});
-autoUpdater.on("update-available", (ev, info) => {
-	mainWindow.webContents.send("update_available");
-	log.info("info", info);
-	log.info("arguments", arguments);
+	sendStatusToWindow("Checking for update...");
 });
 
-autoUpdater.on("update-downloaded", () => {
-	mainWindow.webContents.send("update_downloaded");
+autoUpdater.on("update-available", (info) => {
+	sendStatusToWindow("update_available");
+});
+autoUpdater.on("error", (err) => {
+	sendStatusToWindow("Error in auto-updater. " + err);
+});
+autoUpdater.on("update-downloaded", (info) => {
+	sendStatusToWindow("update_downloaded");
 });
 
 ipcMain.on("restart_app", () => {
