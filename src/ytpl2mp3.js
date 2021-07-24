@@ -15,16 +15,11 @@ const notification = $("#updateModal");
 const message = $("#message");
 const restartButton = $("#restart-button");
 
-// ipcRenderer.on("message", function (event, text) {
-// 	notification.fadeIn();
-// 	message.text(text);
-// });
-
 ipcRenderer.on("message", function (event, text) {
 	notification.fadeIn().removeClass("hidden");
 	message.text(text);
 	ipcRenderer.on("dlFinished", (event, arg) => {
-		if (arg) restartButton.show();
+		if (arg) restartButton.fadeIn().removeClass("hidden");
 	});
 });
 

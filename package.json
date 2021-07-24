@@ -1,6 +1,6 @@
 {
-	"name": "yt2mp3",
-	"version": "1.6.7",
+	"name": "udownload",
+	"version": "1.6.8",
 	"description": "Download youtube playlist to mp3",
 	"main": "main.js",
 	"repository": {
