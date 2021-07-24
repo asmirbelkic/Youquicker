@@ -64,9 +64,9 @@ autoUpdater.on("checking-for-update", () => {
 autoUpdater.on("update-available", (info) => {
 	sendStatusToWindow("update_available");
 });
-autoUpdater.on("error", (err) => {
-	sendStatusToWindow("Error in auto-updater. " + err);
-});
+// autoUpdater.on("error", (err) => {
+// 	sendStatusToWindow("Error in auto-updater. " + err);
+// });
 autoUpdater.on("update-downloaded", (info) => {
 	sendStatusToWindow("update_downloaded");
 });
