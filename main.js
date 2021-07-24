@@ -1,6 +1,7 @@
 const electron = require("electron");
 const globalShortcut = electron.globalShortcut;
 const { app, BrowserWindow, ipcMain } = require("electron");
+const log = require("electron-log");
 const { autoUpdater } = require("electron-updater");
 // const BrowserWindow = electron.BrowserWindow;
 

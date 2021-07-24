@@ -15,17 +15,23 @@ const notification = $("#updateModal");
 const message = $("#message");
 const restartButton = $("#restart-button");
 
-ipcRenderer.on("update_available", () => {
-	ipcRenderer.removeAllListeners("update_available");
-	message.text("Une mise à jour est disponible. Téléchargement...");
-	notification.removeClass("hidden");
-});
+// ipcRenderer.on("update_available", () => {
+// 	ipcRenderer.removeAllListeners("update_available");
+// 	message.text("Une mise à jour est disponible. Téléchargement...");
+// 	notification.removeClass("hidden");
+// });
 
-ipcRenderer.on("update_downloaded", () => {
-	ipcRenderer.removeAllListeners("update_downloaded");
-	message.text(
-		"Mise à jour télécharger. Voulez vous rédémarrer pour installer la mise à jour?"
-	);
+// ipcRenderer.on("update_downloaded", () => {
+// 	ipcRenderer.removeAllListeners("update_downloaded");
+// 	message.text(
+// 		"Mise à jour télécharger. Voulez vous rédémarrer pour installer la mise à jour?"
+// 	);
+// 	restartButton.removeClass("hidden");
+// 	notification.removeClass("hidden");
+// });
+
+ipcRenderer.on("message", function (event, text) {
+	message.text(text);
 	restartButton.removeClass("hidden");
 	notification.removeClass("hidden");
 });
