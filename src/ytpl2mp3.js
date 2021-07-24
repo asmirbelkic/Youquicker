@@ -30,10 +30,20 @@ const restartButton = $("#restart-button");
 // 	notification.removeClass("hidden");
 // });
 
-ipcRenderer.on("message", function (event, text) {
+// ipcRenderer.on("message", function (event, text) {
+// 	message.text(text);
+// 	restartButton.removeClass("hidden");
+// 	notification.removeClass("hidden");
+// });
+
+ipcRenderer.on("update-available", function (event, text) {
+	notification.fadeIn();
 	message.text(text);
 	restartButton.removeClass("hidden");
 	notification.removeClass("hidden");
+});
+ipcRenderer.on("update-downloaded", function (event, text) {
+	message.text(text);
 });
 
 ipcRenderer.send("app_version");

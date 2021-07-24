@@ -57,9 +57,9 @@ ipcMain.on("app_version", (event) => {
 	event.sender.send("app_version", { version: app.getVersion() });
 });
 
-autoUpdater.on("checking-for-update", () => {
-	sendStatusToWindow("Checking for update...");
-});
+// autoUpdater.on("checking-for-update", () => {
+// 	sendStatusToWindow("Checking for update...");
+// });
 
 autoUpdater.on("update-available", (info) => {
 	sendStatusToWindow("update_available");
@@ -68,7 +68,7 @@ autoUpdater.on("update-available", (info) => {
 // 	sendStatusToWindow("Error in auto-updater. " + err);
 // });
 autoUpdater.on("update-downloaded", (info) => {
-	sendStatusToWindow("update_downloaded");
+	sendStatusToWindow("La mise à jour est prête voulez vous l'installer ?");
 });
 
 ipcMain.on("restart_app", () => {
