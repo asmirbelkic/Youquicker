@@ -1,5 +1,4 @@
 const electron = require("electron");
-const globalShortcut = electron.globalShortcut;
 const { app, BrowserWindow, ipcMain } = require("electron");
 const log = require("electron-log");
 const { autoUpdater } = require("electron-updater");
@@ -31,14 +30,6 @@ function createWindow() {
 	win.webContents.once("dom-ready", () => {
 		autoUpdater.checkForUpdatesAndNotify();
 	});
-	// globalShortcut.register("f5", function () {
-	// 	console.log("f5 is pressed");
-	// 	win.reload();
-	// });
-	// globalShortcut.register("CommandOrControl+R", function () {
-	// 	console.log("CommandOrControl+R is pressed");
-	// 	win.reload();
-	// });
 	return win;
 }
 
@@ -51,30 +42,29 @@ app.on("ready", () => {
 	createWindow();
 });
 
+app.on("window-close-all", () => {
+	app.quit();
+});
 app.on("window-all-closed", () => {
 	app.quit();
 });
-
 ipcMain.on("app_version", (event) => {
 	event.sender.send("app_version", { version: app.getVersion() });
 });
 
-autoUpdater.on("checking-for-update", () => {
-	sendStatusToWindow("Recherche de mise à jour...");
-});
+// autoUpdater.on("checking-for-update", () => {
+// 	sendStatusToWindow("Recherche de mise à jour...");
+// });
 
 autoUpdater.on("update-available", (info) => {
-	sendStatusToWindow("Mise à jour disponible.");
+	sendStatusToWindow("Une mise à jour est disponible.");
 });
 
 autoUpdater.on("update-downloaded", (event, info) => {
 	sendStatusToWindow(
 		"Une mise à jour vient d'être téléchargé elle sera automatiquement installer au prochain lancement"
 	);
-});
-
-autoUpdater.on("update-not-available", (info) => {
-	sendStatusToWindow("Mise à jour non disponible.");
+	win.webContents.send("dlFinished", true);
 });
 
 ipcMain.on("restart_app", () => {

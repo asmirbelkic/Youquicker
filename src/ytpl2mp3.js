@@ -21,9 +21,11 @@ const restartButton = $("#restart-button");
 // });
 
 ipcRenderer.on("message", function (event, text) {
-	notification.fadeIn();
+	notification.fadeIn().removeClass("hidden");
 	message.text(text);
-	// restartButton.show();
+	ipcRenderer.on("dlFinished", (event, arg) => {
+		if (arg) restartButton.show();
+	});
 });
 
 ipcRenderer.send("app_version");
@@ -34,10 +36,9 @@ ipcRenderer.on("app_version", (event, arg) => {
 
 console.log("Version :" + app.getVersion());
 
-function restartApp() {
-	ipcRenderer.send("restart_app");
-}
-
+// function restartApp() {
+// 	ipcRenderer.send("restart_app");
+// }
 function closeNotification() {
 	notification.fadeOut("fast");
 }

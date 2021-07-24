@@ -136,6 +136,7 @@ input.input-main[type="text"] {
 	width: 205px;
 	.intro {
 		padding: 20px 14px;
+		-webkit-app-region: drag;
 		h1 {
 			display: flex;
 			align-items: center;
