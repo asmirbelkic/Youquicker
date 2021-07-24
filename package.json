@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"start": "electron .",
-		"build-windows": "electron-builder build --win --x64",
+		"build-windows": "electron-builder build --win",
 		"publish": "electron-builder build --win"
 	},
 	"build": {
