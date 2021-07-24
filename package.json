@@ -9,26 +9,14 @@
 	},
 	"scripts": {
 		"start": "electron .",
-		"build-windows": "electron-builder build --win",
-		"publish": "electron-builder build --win"
+		"build": "electron-builder build --win --publish never",
+		"deploy": "electron-builder build --win --publish always"
 	},
 	"build": {
-		"publish": [
-			{
-				"provider": "github",
-				"owner": "asmirbelkic",
-				"repo": "apptest",
-				"token": "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"
-			}
-		],
-		"appId": "com.electron.udownload",
 		"files": [
 			"!ffmpeg/*",
 			"!dist/*"
-		],
-		"linux": {
-			"target": "AppImage"
-		}
+		]
 	},
 	"license": "MIT",
 	"dependencies": {
