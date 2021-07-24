@@ -16,6 +16,7 @@ function createWindow() {
 		height: 660,
 		frame: false,
 		resizable: true,
+		icon: __dirname + "/src/assets/icons/icon.png",
 		fullscreenable: false,
 		webPreferences: {
 			nodeIntegration: true,
@@ -42,9 +43,6 @@ app.on("ready", () => {
 	createWindow();
 });
 
-app.on("window-close-all", () => {
-	app.quit();
-});
 app.on("window-all-closed", () => {
 	app.quit();
 });

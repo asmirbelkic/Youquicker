@@ -4,7 +4,7 @@ document.getElementById("min-button").addEventListener("click", function () {
 
 document.getElementById("close-button").addEventListener("click", function () {
 	remote.getCurrentWindow().close();
-	app.close();
+	app.quit();
 });
 var checkBox = document.getElementById("checkDebug");
 checkBox.addEventListener("click", function () {

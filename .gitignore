@@ -3,3 +3,4 @@ ffmpeg/
 electron-builder.yml
 node_modules
 dist
+build
