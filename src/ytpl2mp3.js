@@ -195,7 +195,6 @@ createVideoProgressParent.appendChild(createVideoProgress);
 function download_track(link) {
 	ytdl.getInfo(link).then((info) => {
 		// On attache les enfants aux parents avec appendChild
-		VideoParent.appendChild(VideoParent);
 		VideoParent.appendChild(createVideoParent);
 
 		createVideoParent.appendChild(createVideoThumbnail);
@@ -257,7 +256,6 @@ function dl_track_from_playlist(playlist, element) {
 	toastr.info(
 		"Le téléchargement de playlist est en cours de modification et peux ne pas fonctionner."
 	);
-	let createVideoProgress;
 	videoItems.forEach((element) => {
 		let VideoParent = document.querySelector(".video-found");
 		let createVideoParent = document.createElement("div");
