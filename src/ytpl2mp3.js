@@ -9,7 +9,7 @@ const { remote } = require("electron");
 const { ipcRenderer } = require("electron");
 const app = require("electron").remote.app;
 
-// Updating
+// Updating ----------------------------------------------------------------
 const version = $("#appVer");
 const notification = $("#updateModal");
 const message = $("#message");
@@ -19,7 +19,7 @@ ipcRenderer.on("message", function (event, text) {
 	notification.fadeIn().removeClass("hidden");
 	message.text(text);
 	ipcRenderer.on("dlFinished", (event, arg) => {
-		if (arg === true) restartButton.fadeIn().removeClass("hidden");
+		if (arg === true) restartButton.show().removeClass("hidden");
 	});
 });
 
@@ -29,7 +29,7 @@ ipcRenderer.on("app_version", (event, arg) => {
 	version.text("Version " + arg.version);
 });
 
-console.log("Version :" + app.getVersion());
+console.log("Version : " + app.getVersion());
 
 function restartApp() {
 	ipcRenderer.send("restart_app");
@@ -39,15 +39,19 @@ function closeNotification() {
 	notification.fadeOut("fast");
 }
 
-// Toastr notifications
+//----------------------------------------------------------------
+
+// Toastr notifications ----------------------------------------------------------------
 const toastr = require("toastr");
 
 toastr.options = {
 	debug: false,
 	positionClass: "toast-bottom-left",
 	onclick: null,
+	newestOnTop: false,
 };
 
+//----------------------------------------------------------------
 const appDir = app.getPath("userData");
 let dlDir = app.getPath("downloads");
 
@@ -57,7 +61,7 @@ var pathToFfmpeg = require("ffmpeg-static").replace(
 );
 
 ffmpeg.setFfmpegPath(pathToFfmpeg);
-var taille;
+
 var chemin;
 var format;
 var debug;
@@ -71,6 +75,7 @@ window.onload = () => {
 		if (err) {
 			if (!$("#path_text").val()) {
 				$("#path_text").val(dlDir);
+				$("#mp4").prop("checked", true);
 			}
 			$("#messageBoxAlert").fadeIn();
 			$("#accepte-rule").on("click", function () {
@@ -79,6 +84,7 @@ window.onload = () => {
 				save_param();
 				console.log("Settings file : Created");
 			});
+			chemin = dlDir;
 		} else {
 			setting = JSON.parse(fs.readFileSync(appDir + "/userSetting.json"));
 			chemin = setting.path || process.env.HOME || process.env.USERPROFILE;
@@ -104,12 +110,6 @@ window.onload = () => {
 				document.getElementById("messageBox").checked = false;
 			}
 			document.getElementById(setting.format).checked = true;
-			console.log(
-				"Settings file : Readed " + chemin,
-				setting.format,
-				debug,
-				messageBox
-			);
 		}
 	});
 };
@@ -152,7 +152,9 @@ function download() {
 			try {
 				if (ytdl.getVideoID(link)) return download_track(link);
 			} catch (error) {
-				console.error(error);
+				toastr["info"]("Veuillez entrer un lien valide.", "", {
+					timeOut: 1500,
+				});
 			}
 		});
 }
@@ -169,18 +171,46 @@ if (!Array.prototype.last) {
  *
  * @param {*} link
  */
+
+let VideoParent = document.querySelector(".video-found");
+let createVideoParent = document.createElement("div");
+createVideoParent.classList.add("video-inner");
+
+let createVideoThumbnail = document.createElement("div");
+createVideoThumbnail.classList.add("video-thumbnail");
+
+let createVideoArtist = document.createElement("div");
+createVideoArtist.classList.add("artist-info");
+
+let createVideoArtistTitle = document.createElement("div");
+createVideoArtistTitle.classList.add("video-title");
+createVideoArtist.appendChild(createVideoArtistTitle);
+
+let createVideoProgressParent = document.createElement("div");
+createVideoProgressParent.classList.add("progress-bar");
+let createVideoProgress = document.createElement("span");
+createVideoProgress.classList.add("progress-bar-fill");
+createVideoProgressParent.appendChild(createVideoProgress);
+
 function download_track(link) {
 	ytdl.getInfo(link).then((info) => {
+		// On attache les enfants aux parents avec appendChild
+		VideoParent.appendChild(VideoParent);
+		VideoParent.appendChild(createVideoParent);
+
+		createVideoParent.appendChild(createVideoThumbnail);
+		createVideoParent.appendChild(createVideoArtist);
+		createVideoParent.appendChild(createVideoProgressParent);
+
 		// On récupère la dernière valeur du tableau des thumbnails, last étant la meilleure qualité/resolution existante.
 		const thumbnail = info.videoDetails.thumbnails.last().url;
 		const title = info.videoDetails.title;
 		const viewCount = info.videoDetails.viewCount;
 
 		// On affiche les details de la video
-		$(".video-thumbnail").css({ "background-image": `url("${thumbnail}")` });
-		$(".video-title").text(title);
+		createVideoThumbnail.style.cssText = `background-image: url("${thumbnail}")`;
+		createVideoArtistTitle.innerHTML = title;
 		// $(".viewCount").text(viewCount + " vues");
-		$(".video-found").addClass("grid");
 
 		let stream;
 
@@ -193,7 +223,7 @@ function download_track(link) {
 				.audioBitrate(128)
 				.save(output)
 				.on("progress", function (p) {
-					console.log("en cours" + p);
+					console.log("en cours");
 				})
 				.on("end", () => {});
 		} else {
@@ -203,10 +233,14 @@ function download_track(link) {
 		}
 		stream.on("progress", (chunkLength, downloaded, total) => {
 			const percent = downloaded / total;
-			$(".loader-fill").css({
+			$(createVideoProgress).css({
 				width: (percent * 100).toFixed(2) + "%",
 			});
-			$(".loader-text").text((percent * 100).toFixed(2) + "%");
+			if (percent === 1) {
+				toastr["success"](`${title}`, "Terminé", {
+					timeOut: 4000,
+				});
+			}
 		});
 	});
 }
@@ -223,20 +257,70 @@ function dl_track_from_playlist(playlist, element) {
 	toastr.info(
 		"Le téléchargement de playlist est en cours de modification et peux ne pas fonctionner."
 	);
+	let createVideoProgress;
+	videoItems.forEach((element) => {
+		let VideoParent = document.querySelector(".video-found");
+		let createVideoParent = document.createElement("div");
+		createVideoParent.classList.add("video-inner");
+		let createVideoThumbnail = document.createElement("div");
+		createVideoThumbnail.classList.add("video-thumbnail");
+
+		let createVideoArtist = document.createElement("div");
+		createVideoArtist.classList.add("artist-info");
+
+		let createVideoArtistTitle = document.createElement("div");
+		createVideoArtistTitle.classList.add("video-title");
+		createVideoArtist.appendChild(createVideoArtistTitle);
+
+		let createVideoProgressParent = document.createElement("div");
+		createVideoProgressParent.classList.add("progress-bar");
+		let createVideoProgress = document.createElement("span");
+		createVideoProgress.classList.add("progress-bar-fill");
+		createVideoProgressParent.appendChild(createVideoProgress);
+
+		const elementThumbnail = element.bestThumbnail.url;
+		const elementTitle = element.title;
+		const elementIndex = element.index;
+		createVideoParent.setAttribute("data-id", elementIndex);
+
+		VideoParent.appendChild(createVideoParent);
+		createVideoParent.appendChild(createVideoThumbnail);
+		createVideoParent.appendChild(createVideoArtist);
+		createVideoParent.appendChild(createVideoProgressParent);
+
+		createVideoThumbnail.style.cssText = `background-image: url("${elementThumbnail}")`;
+		createVideoArtistTitle.innerHTML = elementTitle;
+	});
+
 	if (format === "mp3") {
 		async function dlPlaylistMp3() {
 			for (let i = 0; i < videoLength; i++) {
+				const videoIndex = videoItems[i].index;
 				const videoUrl = videoItems[i].url;
 				const videoTitle = videoItems[i].title;
 				output = `${chemin}/${videoTitle.replace(/[^\w\s]/gi, "-")}.mp3`;
 				const stream = ytdl(videoUrl, {
 					quality: "highestaudio",
 				});
+				stream.on("progress", (chunkLength, downloaded, total) => {
+					const percent = downloaded / total;
+					$(`div[data-id="${videoIndex}"]`)
+						.children(".progress-bar")
+						.children(".progress-bar-fill")
+						.css({
+							width: (percent * 100).toFixed(2) + "%",
+						});
+					if (percent === 1) {
+						toastr["success"](`${videoTitle}`, "Terminé", {
+							timeOut: 4000,
+						});
+					}
+				});
 				ffmpeg(stream)
 					.audioBitrate(128)
 					.save(output)
-					.on("progress", function (p) {
-						console.log("en cours" + p);
+					.on("progress", function () {
+						console.log("en cours");
 					})
 					.on("end", () => {
 						console.log("end");
@@ -248,14 +332,25 @@ function dl_track_from_playlist(playlist, element) {
 	} else {
 		async function dlPlaylistMp4() {
 			for (let i = 0; i < videoLength; i++) {
+				const videoIndex = videoItems[i].index;
 				const videoUrl = videoItems[i].url;
 				const videoTitle = videoItems[i].title;
 				const stream = ytdl(videoUrl);
 				output = `${chemin}/${videoTitle.replace(/[^\w\s]/gi, "-")}.mp4`;
-				console.log(videoTitle, videoUrl);
 				stream.pipe(fs.createWriteStream(output));
-				stream.on("progress", () => {
-					console.log("Downloading" + videoTitle);
+				stream.on("progress", (chunkLength, downloaded, total) => {
+					const percent = downloaded / total;
+					$(`div[data-id="${videoIndex}"]`)
+						.children(".progress-bar")
+						.children(".progress-bar-fill")
+						.css({
+							width: (percent * 100).toFixed(2) + "%",
+						});
+					if (percent === 1) {
+						toastr["success"](`${videoTitle}`, "Terminé", {
+							timeOut: 4000,
+						});
+					}
 				});
 				await new Promise((resolve) => stream.on("finish", resolve));
 			}
@@ -271,6 +366,7 @@ function choose_path() {
 	});
 	if (data != undefined) chemin = data;
 	document.getElementById("path_text").value = chemin;
+	save_param();
 }
 
 function afficher_err(text, err) {
@@ -287,13 +383,49 @@ function save_param() {
 	};
 	fs.writeFileSync(appDir + "/userSetting.json", JSON.stringify(setting));
 }
-$("#saveParam").on("click", function () {
-	toastr.success(`Sauvegardé`, {
-		timeOut: 100,
-	});
-});
 
 $(document).on("click", 'a[href^="http"]', function (event) {
 	event.preventDefault();
 	shell.openExternal(this.href);
+});
+
+$("#stPage input").on("change", function () {
+	save_param();
+	toastr["success"]("Sauvegardé", "", {
+		timeOut: 800,
+	});
+});
+
+("use strict");
+
+const Menu = remote.Menu;
+
+const InputMenu = Menu.buildFromTemplate([
+	{
+		label: "Cut",
+		role: "cut",
+	},
+	{
+		label: "Copy",
+		role: "copy",
+	},
+	{
+		label: "Paste",
+		role: "paste",
+	},
+]);
+
+document.body.addEventListener("contextmenu", (e) => {
+	e.preventDefault();
+	e.stopPropagation();
+
+	let node = e.target;
+
+	while (node) {
+		if (node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable) {
+			InputMenu.popup(remote.getCurrentWindow());
+			break;
+		}
+		node = node.parentNode;
+	}
 });

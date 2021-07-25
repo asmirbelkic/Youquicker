@@ -14,6 +14,7 @@ html {
 body {
 	font-family: var(--primary-ff), sans-serif;
 	background: #fff;
+	border-radius: var(--radius);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	overflow: hidden;
@@ -22,6 +23,8 @@ body {
 }
 
 * {
+	user-select: none;
+	-webkit-user-drag: none;
 	box-sizing: inherit;
 	user-select: none;
 

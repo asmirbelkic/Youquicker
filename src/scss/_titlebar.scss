@@ -34,18 +34,16 @@
 			align-items: center;
 			user-select: none;
 			cursor: pointer;
-			transition: 0.1s ease;
-			background: #fafafa;
+			transition: 0.12s ease;
+			opacity: 0.4;
 			.icon {
-				width: 20px;
-				height: 20px;
-				stroke: #333;
-				fill: none;
-				stroke-linecap: round;
-				stroke-linejoin: round;
+				width: 13px;
+				height: 13px;
+				fill: #333;
 			}
 
 			&:hover {
+				opacity: 1;
 				background: #eee;
 			}
 		}

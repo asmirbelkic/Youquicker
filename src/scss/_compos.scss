@@ -302,30 +302,6 @@ a {
 	z-index: 10;
 }
 
-.p-tooltip-content {
-	opacity: 0;
-	border-radius: 5px;
-	padding: 10px;
-	min-width: 50px;
-	white-space: nowrap;
-	pointer-events: none;
-	background-color: #1a1a1a;
-	bottom: 100%;
-	left: 50%;
-	position: absolute;
-	transform: translate(-50%, -8px);
-	z-index: 10;
-
-	p {
-		margin: 0;
-		color: #fff;
-	}
-
-	.icon svg {
-		stroke: #fff;
-	}
-}
-
 .status-light {
 	/* Background color */
 	background-color: #00d067;

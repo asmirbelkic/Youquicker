@@ -15,13 +15,6 @@ checkBox.addEventListener("click", function () {
 	}
 });
 
-function toggleAll(source) {
-	checkboxes = document.getElementsByName("videoNames");
-	for (var i = 0, n = checkboxes.length; i < n; i++) {
-		checkboxes[i].checked = source.checked;
-	}
-}
-
 $(".sidebar-menu a").on("click", function () {
 	var tab_id = $(this).attr("data-name");
 
